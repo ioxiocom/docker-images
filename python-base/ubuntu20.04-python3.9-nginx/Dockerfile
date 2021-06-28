@@ -1,4 +1,4 @@
-FROM digitallivinginternational/python-base:ubuntu20.04-python3.9
+FROM python-base:ubuntu20.04-python3.9
 
 ENV \
     PARSE_TEMPLATE_HASH="8d1dc39e701b938f4874f3f8130cd3a324e7fa4697af36541918f9398dd61223" \
