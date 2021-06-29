@@ -18,7 +18,7 @@ apt-get update
 apt-get install -y --no-install-recommends \
   nginx \
   curl \
-  ""
+# This line is intentionally empty to preserve trailing \ in previous list
 
 # Install parse-template
 curl -L -o /usr/bin/parse-template \
@@ -29,7 +29,6 @@ chmod +x /usr/bin/parse-template
 # ---------------
 # Nginx configuration
 # ---------------
-
 # This is where logs will be stored. It should be accessible by ${USER}
 mkdir /run/nginx
 chown -R "${USER}:${GROUP}" /run/nginx

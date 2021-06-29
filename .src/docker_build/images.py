@@ -48,9 +48,8 @@ def sort_images(images_: Dict[str, List[str]]) -> List[List[str]]:
         except ValueError:
             logger.error("{image} found in PRIORITY_BUILDS is incorrect", image=img)
             raise
-    for img in conf.PRIORITY_BUILDS[::-1]:
-        images.insert(0, img)
 
+    images = conf.PRIORITY_BUILDS + images
     return [img.split("/", maxsplit=1) for img in images]
 
 
