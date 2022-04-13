@@ -4,7 +4,7 @@ RUN --mount=type=cache,target=/var/lib/apt/lists/ \
     set -exu \
     # apt-cacher-ng
  && apt-get update \
- && apt-get install -y apt-cacher-ng \
+ && apt-get install -y apt-cacher-ng urllib3=1.26.5 \
  && :
 
 EXPOSE 3142
