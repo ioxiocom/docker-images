@@ -13,4 +13,16 @@
 # shellcheck disable=SC2039
 set -exuo pipefail
 
+# Install system dependencies
+apt-get update
+apt-get install -y --no-install-recommends \
+  curl \
+# This line is intentionally empty to preserve trailing \ in previous list
+
 bash /src/docker/scripts/install_node.sh
+
+# Clean up
+apt-get remove -y \
+  curl
+apt-get clean
+rm -rf /var/lib/apt/lists/*
