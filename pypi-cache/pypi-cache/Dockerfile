@@ -1,4 +1,4 @@
-FROM nginx-base/alpine-nginx:latest
+FROM digitallivinginternational/nginx-base:latest
 
 ADD site.conf /etc/nginx/conf.d
 
