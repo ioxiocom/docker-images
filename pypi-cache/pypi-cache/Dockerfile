@@ -1,9 +1,10 @@
-FROM lietu/nginx-base:latest
+FROM nginx-base:latest
 
 ADD site.conf /etc/nginx/conf.d
 
 RUN set -exu \
  && apk add openssl \
+ && apk add --no-cache xz-libs~=5.2.5-r1 xz~=5.2.5-r1 \
  && mkdir -p /etc/nginx/ssl \
  && openssl req -x509 -nodes \
     -days 3650 \
@@ -12,4 +13,3 @@ RUN set -exu \
     -out /etc/nginx/ssl/ssl.crt \
     -subj "/C=/ST=/L=/O=/OU=/CN=" \
  && apk del openssl \
-

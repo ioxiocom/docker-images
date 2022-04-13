@@ -1,4 +1,4 @@
-FROM lietu/python-base:ubuntu20.04-python3.9
+FROM python-base:ubuntu20.04-python3.9
 
 RUN --mount=type=cache,target=/var/lib/apt/lists/ \
     set -exu \
