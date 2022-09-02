@@ -14,10 +14,6 @@ pydantic = "^1.8.2"
 PyYAML = "^5.4.1"
 loguru = "^0.5.3"
 
-[tool.skjold]
-report_only = false
-sources = ["pyup", "gemnasium"]
-
 [tool.poetry.dev-dependencies]
 
 [tool.poetry.scripts]
@@ -25,6 +21,10 @@ build = "docker_build.main:build"
 upload = "docker_build.main:upload"
 list = "docker_build.main:list"
 docker_username = "docker_build.main:docker_username"
+
+[tool.skjold]
+report_only = false
+sources = ["pyup", "gemnasium"]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
