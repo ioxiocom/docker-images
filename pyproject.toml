@@ -17,10 +17,10 @@ loguru = "^0.6.0"
 [tool.poetry.dev-dependencies]
 
 [tool.poetry.scripts]
-build = "docker_build.main:build"
-upload = "docker_build.main:upload"
-list = "docker_build.main:list"
-docker_username = "docker_build.main:docker_username"
+build = "docker_build.main:build_cli"
+upload = "docker_build.main:upload_cli"
+list = "docker_build.main:list_cli"
+docker_username = "docker_build.main:docker_username_cli"
 
 [tool.skjold]
 report_only = false

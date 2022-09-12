@@ -1,3 +1,6 @@
+from enum import Enum
+from typing import Optional
+
 import typer
 from docker_build.images import (
     build_image,
@@ -10,18 +13,28 @@ from docker_build.validation import validate
 
 from settings import conf
 
-cli = typer.Typer()
+
+class Platform(str, Enum):
+    LINUX_AMD64 = "linux/amd64"
+    LINUX_ARM64 = "linux/arm64"
 
 
-@cli.command(help="Build docker images")
-def build():
+build_cli = typer.Typer()
+upload_cli = typer.Typer()
+list_cli = typer.Typer()
+docker_username_cli = typer.Typer()
+
+
+@build_cli.command(help="Build docker images")
+def build(platform: Optional[Platform] = typer.Option(None)):
+    platform = platform.value if platform else None
     images = find_images()
     validate(images)
     for image, version in sort_images(images):
-        build_image(image, version)
+        build_image(image, version, platform)
 
 
-@cli.command(help="Upload docker tags")
+@upload_cli.command(help="Upload docker tags")
 def upload():
     images = find_images()
     validate(images)
@@ -30,7 +43,7 @@ def upload():
             upload_tags(image, version)
 
 
-@cli.command(help="List unique docker images managed by this tool")
+@list_cli.command(help="List unique docker images managed by this tool")
 def list():
     images = find_images()
     for image, versions in images.items():
@@ -38,6 +51,6 @@ def list():
             print(docker_tag(image, version))
 
 
-@cli.command(help="Get the configured Docker username")
+@docker_username_cli.command(help="Get the configured Docker username")
 def docker_username():
     print(conf.DOCKER_USER)
