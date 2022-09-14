@@ -19,14 +19,14 @@ class Platform(str, Enum):
     LINUX_ARM64 = "linux/arm64"
 
 
-build_cli = typer.Typer()
-upload_cli = typer.Typer()
-list_cli = typer.Typer()
-docker_username_cli = typer.Typer()
+build = typer.Typer()
+upload = typer.Typer()
+list = typer.Typer()
+docker_username = typer.Typer()
 
 
-@build_cli.command(help="Build docker images")
-def build(platform: Optional[Platform] = typer.Option(None)):
+@build.command(help="Build docker images")
+def _build(platform: Optional[Platform] = typer.Option(None)):
     platform = platform.value if platform else None
     images = find_images()
     validate(images)
@@ -34,8 +34,8 @@ def build(platform: Optional[Platform] = typer.Option(None)):
         build_image(image, version, platform)
 
 
-@upload_cli.command(help="Upload docker tags")
-def upload():
+@upload.command(help="Upload docker tags")
+def _upload():
     images = find_images()
     validate(images)
     for image, versions in images.items():
@@ -43,14 +43,14 @@ def upload():
             upload_tags(image, version)
 
 
-@list_cli.command(help="List unique docker images managed by this tool")
-def list():
+@list.command(help="List unique docker images managed by this tool")
+def _list():
     images = find_images()
     for image, versions in images.items():
         for version in versions:
             print(docker_tag(image, version))
 
 
-@docker_username_cli.command(help="Get the configured Docker username")
-def docker_username():
+@docker_username.command(help="Get the configured Docker username")
+def _docker_username():
     print(conf.DOCKER_USER)
