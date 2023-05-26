@@ -177,6 +177,8 @@ def scan_image(image: str, version: str) -> bool:
                 "trivy",
                 "image",
                 "--skip-db-update",
+                "--format",
+                "json",
                 "--severity",
                 "HIGH,CRITICAL",
                 "--exit-code",
