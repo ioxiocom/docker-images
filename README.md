@@ -21,7 +21,7 @@ Afterwards you can either set this up on your own build pipelines with the comma
 
 ```
 poetry install
-poetry run build
+poetry run build_muliplatform
 poetry run upload
 poetry run scan
 ```
@@ -63,6 +63,16 @@ secret ("token" is a [personal access token](https://docs.docker.com/docker-hub/
 log into your account for upload. This needs to be for the Docker hub user configured in `settings.py`.
 
 The `scan` command uses `trivy` which you will need installed on your system first.
+
+## Multiplatform support
+
+There are several technical restrictions when building images for multiple platforms
+with `buildx`, such as that `buildx` can't find an image in local docker environment (see notes in [output](https://docs.docker.com/engine/reference/commandline/buildx_build/#output) section of the docs). But it's possible to push base images right away to a docker registry and then explicitly define this registry in `FROM` statements.
+
+That's why there are 2 options to build images:
+
+- `poetry run build` builds all images for the current platform only with `docker build` under the hood. It's suitable for local development of the images
+- `poetry run build_multiplatform` builds all images using `docker buildx build` for linux/amd64 and linux/arm64. It requires extra setup (check [pipeline code](./.github/workflows/build-and-upload.yaml)) and is not recommended for a local development
 
 ## Contributions
 
