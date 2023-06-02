@@ -140,12 +140,58 @@ def build_image(image: str, version: str, verbose=True, platform: Optional[str] 
         )
 
 
+def build_image_multiplatform(
+    image: str, version: str, platforms: List[str], verbose=True
+):
+    name = f"{image}/{version}"
+
+    logger.info("Building {name}", name=name)
+
+    localhost_tag = f"{conf.LOCAL_REGISTRY}/{image}:{version}"
+    build_cmd = [
+        "docker",
+        "buildx",
+        "build",
+        "--platform",
+        ",".join(platforms),
+        name,
+        "-t",
+        localhost_tag,
+        "--build-arg",
+        f"LOCAL_REGISTRY={conf.LOCAL_REGISTRY}/",
+        "--network=host",
+        "--push",  # push to localhost registry
+    ]
+
+    start = datetime.now()
+    run(build_cmd, verbose=verbose)
+    end = datetime.now()
+    if not verbose:
+        logger.info(
+            "Built {name} in {elapsed}",
+            name=name,
+            elapsed=humanize.precisedelta(end - start),
+        )
+
+
 def upload_tags(image: str, version: str):
     name = f"{image}/{version}"
     logger.info("Uploading tags for {name}", name=name)
 
     # --all-tags added in Docker 20.10.0
     run(["docker", "push", "--all-tags", docker_image(image)])
+
+
+def upload_tags_from_local_registry(images: Dict[str, List[str]]):
+    run(["regctl", "registry", "set", "--tls", "disabled", conf.LOCAL_REGISTRY])
+    for image, versions in images.items():
+        for version in versions:
+            config = get_config(image, version)
+            localhost_tag = f"{conf.LOCAL_REGISTRY}/{image}:{version}"
+            tags = [docker_tag(image, tag) for tag in config.tags]
+            tags.append(docker_tag(image, version))
+            for tag in tags:
+                run(["regctl", "image", "copy", localhost_tag, tag], verbose=True)
 
 
 def docker_image(image: str) -> str:
