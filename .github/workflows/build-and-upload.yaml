@@ -51,7 +51,7 @@ jobs:
         env:
           VERSION: v0.4.7
 
-      - name: Check install
+      - name: Check regctl installation
         run: regctl version
 
       - name: Set up QEMU

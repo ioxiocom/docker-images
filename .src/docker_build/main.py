@@ -31,7 +31,6 @@ class Platform(str, Enum):
 build = typer.Typer()
 build_multiplatform = typer.Typer()
 upload = typer.Typer()
-sync = typer.Typer()
 scan = typer.Typer()
 list = typer.Typer()
 docker_username = typer.Typer()
