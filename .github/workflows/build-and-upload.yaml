@@ -16,8 +16,16 @@ jobs:
   build_and_upload:
     name: Build and upload
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v2
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@465a07811f14bebb1938fbed4728c6a1ff8901fc
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_PAT }}
 
       - name: Set up Python
         uses: actions/setup-python@v1
@@ -36,10 +44,4 @@ jobs:
       - name: Upload images
         if: success()
         run: |
-          echo "$PASSWORD" | docker login --username "$USERNAME" --password-stdin
           poetry run upload
-        env:
-          PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
-          # this is not a mistake! this user is authorized to push to
-          # digitallivinginternational
-          USERNAME: lietu

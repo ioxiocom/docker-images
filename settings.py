@@ -3,8 +3,8 @@ from pydantic import BaseSettings
 
 # Any of these can be overridden via environment variables with matching names
 class Settings(BaseSettings):
-    # User or organization name, used for "user/image" -name generation
-    DOCKER_USER = "digitallivinginternational"  # Hopefully we'll get a shorter one
+    # Github container registry link and User or organization name, used for "user/image" -name generation
+    DOCKER_USER = "ghcr.io/ioxiocom"
 
     # List of images that should be built beforehand
     PRIORITY_BUILDS = [
