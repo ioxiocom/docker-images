@@ -3,18 +3,22 @@
 Builds your Docker images automatically, like magic. Good for handling common base
 images for all your projects, apps, whatever.
 
-This repository builds images to its [GitHub container registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry)
+This repository builds images to its
+[GitHub container registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry)
 
 ## How do you use this then?
 
 Well, we got 3 things you need to worry about:
 
-1. General configuration in `settings.py`: Basically you need to set up your Docker hub username prefixed by the `ghcr.io` since we are using GitHub container registry so as to       prefix all built images with the right name
-2. Images and versions: First level of subdirectories in this repo is "images", as in the repository
-   names (`username/<repository>`) for Docker hub. The subdirectories in that defines the "versions" - basically default
-   tags for things to be built for that repository.
-3. Additional tags: In `image/version/config.yaml` you can define additional tags for the built image, like `latest`, or
-   whatever aliases you may want for it.
+1. General configuration in `settings.py`: Basically you need to set up your Docker hub
+   username prefixed by the `ghcr.io` since we are using GitHub container registry so as
+   to prefix all built images with the right name
+2. Images and versions: First level of subdirectories in this repo is "images", as in
+   the repository names (`username/<repository>`) for Docker hub. The subdirectories in
+   that defines the "versions" - basically default tags for things to be built for that
+   repository.
+3. Additional tags: In `image/version/config.yaml` you can define additional tags for
+   the built image, like `latest`, or whatever aliases you may want for it.
 
 Afterwards you can either set this up on your own build pipelines with the commands:
 
