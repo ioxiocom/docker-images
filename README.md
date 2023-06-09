@@ -4,7 +4,7 @@ Builds your Docker images automatically, like magic. Good for handling common ba
 images for all your projects, apps, whatever.
 
 This repository builds images to its
-[GitHub container registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry)
+[github.com/ioxiocom?tab=packages](https://github.com/ioxiocom?tab=packages)
 
 ## How do you use this then?
 
