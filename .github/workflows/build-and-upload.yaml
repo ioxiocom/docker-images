@@ -20,13 +20,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Log in to the Container registry
-        uses: docker/login-action@465a07811f14bebb1938fbed4728c6a1ff8901fc # v2.2.0
-        with:
-          registry: gchr.io
-          username: ${{ secrets.GHCR_USERNAME }}
-          password: ${{ secrets.GHCR_PAT }}
-
       - name: Install regctl
         run: |
           set -ex
@@ -92,4 +85,8 @@ jobs:
       - name: Upload images
         if: success()
         run: |
+          echo "$PASSWORD" | docker login ghcr.io --username "$USERNAME" --password-stdin
           poetry run upload
+        env:
+          PASSWORD: ${{ secrets.GHCR_PAT }}
+          USERNAME: ${{ secrets.GHCR_USERNAME }}
