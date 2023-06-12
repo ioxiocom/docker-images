@@ -3,7 +3,7 @@ from pydantic import BaseSettings
 
 # Any of these can be overridden via environment variables with matching names
 class Settings(BaseSettings):
-    # Github container registry link and User or organization name, used for "user/image" -name generation
+    # GitHub container registry and organization name, used for "registry/org/image" -name generation
     DOCKER_USER = "ghcr.io/ioxiocom"
 
     LOCAL_REGISTRY = "localhost:5000"
