@@ -3,8 +3,9 @@
 Builds your Docker images automatically, like magic. Good for handling common base
 images for all your projects, apps, whatever.
 
-This repository builds images to its
-[github.com/ioxiocom?tab=packages](https://github.com/ioxiocom?tab=packages)
+This repository builds images to
+[IOXIO® GitHub Packages](https://github.com/orgs/ioxiocom/packages) or
+`ghcr.io/ioxiocom/`
 
 ## How do you use this then?
 
