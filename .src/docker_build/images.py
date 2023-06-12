@@ -175,23 +175,6 @@ def build_image_multiplatform(
         )
 
 
-def upload_tags(image: str, version: str, verbose=True):
-    name = f"{image}/{version}"
-    logger.info("Uploading tags for {name}", name=name)
-
-    # --all-tags added in Docker 20.10.0
-    start = datetime.now()
-    run(["docker", "push", "--all-tags", docker_image(image)], verbose)
-    end = datetime.now()
-
-    if not verbose:
-        logger.info(
-            "Uploaded {name} in {elapsed}",
-            name=name,
-            elapsed=humanize.precisedelta(end - start),
-        )
-
-
 def upload_tags_from_local_registry(images: Dict[str, List[str]]):
     # local docker registry runs by HTTP, so we state it in regctl
     run(["regctl", "registry", "set", "--tls", "disabled", conf.LOCAL_REGISTRY])
