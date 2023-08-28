@@ -11,4 +11,4 @@ apt-get update
 apt-get install -y --no-install-recommends nodejs
 
 # Install sane package managers
-npm install -g pnpm yarn
+npm install -g pnpm@@8.6.12 yarn
