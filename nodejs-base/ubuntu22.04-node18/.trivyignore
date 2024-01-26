@@ -9,3 +9,6 @@ CVE-2023-3090
 
 #X.400 address type confusion in X.509 GeneralName
 CVE-2023-0286
+
+# pypa-setuptools: Regular Expression Denial of Service (ReDoS) in package_index.py
+CVE-2022-40897
