@@ -15,11 +15,9 @@ class Settings(BaseSettings):
             "nginx-base/alpine-nginx",
         ],
         [
-            "python-base/ubuntu22.04-python3.10",
             "python-base/ubuntu22.04-python3.11",
         ],
         [
-            "python-base/ubuntu22.04-python3.10-nginx",
             "python-base/ubuntu22.04-python3.11-nginx",
         ],
     ]
