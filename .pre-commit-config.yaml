@@ -2,25 +2,25 @@
 # See https://pre-commit.com/hooks.html for more hooks
 repos:
   - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: v0.9.0.2
+    rev: v0.10.0.1
     hooks:
       # Run shellcheck for all .sh files
       - id: shellcheck
 
   - repo: https://github.com/pycqa/isort
-    rev: 5.12.0
+    rev: 6.0.0
     hooks:
       - id: isort
 
   - repo: https://github.com/psf/black
-    rev: 23.3.0
+    rev: 25.1.0
     hooks:
       # Format Python files
       - id: black
         language_version: python3
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v5.0.0
     hooks:
       # Clean up trailing whitespace
       - id: trailing-whitespace
@@ -70,11 +70,11 @@ repos:
       - id: prettier
 
   - repo: https://github.com/PyCQA/flake8
-    rev: 6.0.0
+    rev: 7.1.1
     hooks:
       - id: flake8
 
   - repo: https://github.com/twu/skjold
-    rev: v0.6.1
+    rev: v0.6.2
     hooks:
       - id: skjold
