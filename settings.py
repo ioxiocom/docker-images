@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     # List of images that should be built beforehand
     PRIORITY_BUILDS = [
         [
+            "debian-base/12",
             "ubuntu-base/22.04",
             "nginx-base/alpine-nginx",
         ],
