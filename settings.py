@@ -17,6 +17,7 @@ class Settings(BaseSettings):
         ],
         [
             "python-base/ubuntu22.04-python3.11",
+            "python-base/debian12-python3.13",
         ],
         [
             "python-base/ubuntu22.04-python3.11-nginx",
