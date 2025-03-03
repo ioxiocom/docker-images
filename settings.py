@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     PRIORITY_BUILDS = [
         [
             "ubuntu-base/22.04",
+            "ubuntu-base/24.04",
             "nginx-base/alpine-nginx",
         ],
         [
