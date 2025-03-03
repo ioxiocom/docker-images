@@ -45,6 +45,23 @@ bash /src/docker/scripts/install_multi_start.sh
 chown -R "${USER}":"${GROUP}" /src
 
 # Cleanup
+apt-get remove -y \
+  build-essential \
+  git \
+  libbz2-dev \
+  libffi-dev \
+  liblzma-dev \
+  libncursesw5-dev \
+  libreadline-dev \
+  libsqlite3-dev \
+  libssl-dev \
+  libxml2-dev \
+  libxmlsec1-dev \
+  tk-dev \
+  xz-utils \
+  zlib1g-dev \
+# This line is intentionally empty to preserve trailing \ in previous list
+
 apt-get clean
 rm -rf /var/lib/apt/lists/*
 rm -rf /root/.cache
