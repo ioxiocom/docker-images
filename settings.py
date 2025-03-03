@@ -13,6 +13,7 @@ class Settings(BaseSettings):
         [
             "debian-base/12",
             "ubuntu-base/22.04",
+            "ubuntu-base/24.04",
             "nginx-base/alpine-nginx",
         ],
         [
