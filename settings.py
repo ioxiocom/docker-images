@@ -21,6 +21,7 @@ class Settings(BaseSettings):
         ],
         [
             "python-base/ubuntu22.04-python3.11-nginx",
+            "python-base/ubuntu24.04-python3.13-nginx",
         ],
     ]
 
