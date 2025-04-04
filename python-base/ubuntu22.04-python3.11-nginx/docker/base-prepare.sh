@@ -22,7 +22,7 @@ apt-get install -y --no-install-recommends \
 
 # Install parse-template
 curl -L -o /usr/bin/parse-template \
-      "https://github.com/cocreators-ee/parse-template/releases/download/${PARSE_TEMPLATE_VERSION}/parse-template-linux-amd64"
+      "https://github.com/cocreators-ee/parse-template/releases/download/${PARSE_TEMPLATE_VERSION}/parse-template_Linux_x86_64"
 echo "${PARSE_TEMPLATE_HASH}  /usr/bin/parse-template" | sha256sum -c
 chmod +x /usr/bin/parse-template
 
