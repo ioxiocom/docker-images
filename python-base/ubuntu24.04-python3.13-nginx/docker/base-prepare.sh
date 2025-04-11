@@ -22,11 +22,13 @@ apt-get install -y --no-install-recommends \
 
 # Install parse-template
 ARCH=$(uname -m)
-curl -L -o /usr/bin/parse-template \
-      "https://github.com/cocreators-ee/parse-template/releases/download/${PARSE_TEMPLATE_VERSION}/parse-template_Linux_${ARCH}"
 if [ "${ARCH}" = "x86_64" ]; then
+  curl -L -o /usr/bin/parse-template \
+      "https://github.com/cocreators-ee/parse-template/releases/download/${PARSE_TEMPLATE_VERSION}/parse-template_Linux_x86_64"
   echo "${PARSE_TEMPLATE_HASH_X86_64}  /usr/bin/parse-template" | sha256sum -c
 elif [ "${ARCH}" = "arm64" ] || [ "${ARCH}" = "aarch64" ]; then
+  curl -L -o /usr/bin/parse-template \
+      "https://github.com/cocreators-ee/parse-template/releases/download/${PARSE_TEMPLATE_VERSION}/parse-template_Linux_arm64"
   echo "${PARSE_TEMPLATE_HASH_ARM64}  /usr/bin/parse-template" | sha256sum -c
 else
   echo "Unsupported architecture: ${ARCH}"
