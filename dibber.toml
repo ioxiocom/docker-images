@@ -1,0 +1,17 @@
+
+docker_user = "ghcr.io/ioxiocom"
+
+local_registry = "localhost:5000"
+
+priority_builds = [
+    [
+        "ubuntu-base/24.04",
+        "nginx-base/alpine-nginx",
+    ],
+    [
+        "python-base/ubuntu24.04-python3.13",
+    ],
+    [
+        "python-base/ubuntu24.04-python3.13-nginx",
+    ],
+]
