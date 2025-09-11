@@ -1,7 +1,7 @@
 # Docker images
 
 This repository builds docker images to
-[github.com/orgs/ioxiocom/packages](https://github.com/lietu?tab=packages) or `ghcr.io/ioxiocom/...`.
+[github.com/orgs/ioxiocom/packages](https://github.com/orgs/ioxiocom/packages) or `ghcr.io/ioxiocom/...`.
 
 Built using [dibber](https://github.com/lietu/dibber).
 
