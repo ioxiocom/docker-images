@@ -11,4 +11,4 @@ apt-get update
 apt-get install -y --no-install-recommends nodejs
 
 # Install sane package managers
-npm install -g pnpm@latest-9
+npm install -g pnpm@latest-10
