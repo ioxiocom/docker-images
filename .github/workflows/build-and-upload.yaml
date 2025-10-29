@@ -15,7 +15,7 @@ env:
 jobs:
   build_and_upload:
     name: Build and upload
-    runs-on: ubuntu-latest
+    runs-on: faster-amd64 # Faster build machine, costs a bit extra
 
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
