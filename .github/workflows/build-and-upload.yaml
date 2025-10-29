@@ -87,7 +87,7 @@ jobs:
         run: docker run -d -p 5000:5000 --name registry --network=host registry:2
 
       - name: Install Dibber
-        run: pip install dibber
+        run: pip install dibber==1.0.6 # TODO: Pinned until supporting parallel multi-platform builds
 
       - name: Build images
         run: dibber build-multiplatform --parallel 8
