@@ -1,13 +1,8 @@
-ARG LOCAL_REGISTRY=""
-FROM ${LOCAL_REGISTRY}ubuntu-base:24.04
+FROM ubuntu-base:24.04
 
 ENV \
-    DEBIAN_FRONTEND="noninteractive" \
     GID=2000 \
     GROUP="api" \
-    LANG=C.UTF-8 \
-    LC_ALL=C.UTF-8 \
-    TZ="UTC" \
     UID=2000 \
     USER="api" \
     ENV_LAST_LINE="LEAVE-ME-HERE"
