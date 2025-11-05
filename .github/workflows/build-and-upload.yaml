@@ -1,6 +1,7 @@
 name: Build and upload images
 
 on:
+  # Allow manually triggering workflow
   workflow_dispatch:
   schedule:
     # First day of every month, you know, for automatic updates etc.
@@ -11,17 +12,34 @@ on:
 
 env:
   DOCKER_BUILDKIT: 1
+  DIBBER_VERSION: 1.1.11
+  DIBBER_PARALLEL_BUILDS: 8
+
+# Cancel previous builds if a new one is triggered
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
 
 jobs:
-  build_and_upload:
-    name: Build and upload
-    runs-on: faster-amd64 # Faster build machine, costs a bit extra
+  #
+  # AMD64 builds
+  #
+
+  build_and_upload_amd64:
+    name: Build AMD64
+    env:
+      ARCH: amd64
+
+    #runs-on: ubuntu-24.04
+    # If you want to run on a custom runner to make this faster you need to create one here
+    # https://github.com/organizations/<orgname>/settings/actions/runners
+    runs-on: faster-amd64
 
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Log in to the Container registry
-        uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1 # v3.5.0
+        uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # v3.6.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -32,67 +50,143 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Install regctl
-        run: |
-          set -ex
-
-          INSTALL_DIR="$HOME/.regctl"
-          OS=linux
-          ARCH=amd64
-
-          mkdir -p "$INSTALL_DIR"
-
-          # Download and Install regctl
-          curl -fsSL "https://github.com/regclient/regclient/releases/download/${VERSION}/regctl-${OS}-${ARCH}" > "${INSTALL_DIR}/regctl"
-          chmod 755 "${INSTALL_DIR}/regctl"
-
-          # Validate download
-          if which cosign >/dev/null; then
-            curl -fsSL https://github.com/regclient/regclient/releases/latest/download/metadata.tgz > metadata.tgz
-            tar -xzf metadata.tgz regctl-${OS}-${ARCH}.pem regctl-${OS}-${ARCH}.sig
-            cosign verify-blob \
-              --certificate-oidc-issuer https://token.actions.githubusercontent.com \
-              --certificate-identity-regexp https://github.com/regclient/regclient/.github/workflows/ \
-              --certificate regctl-${OS}-${ARCH}.pem \
-              --signature regctl-${OS}-${ARCH}.sig \
-              "${{ inputs.install-dir }}/regctl"
-            rm -rf metadata.tgz regctl-${OS}-${ARCH}.pem regctl-${OS}-${ARCH}.sig
-          fi
-
-          # Add it to environment
-          echo "${INSTALL_DIR}" >> $GITHUB_PATH
-        env:
-          VERSION: v0.4.7
-
-      - name: Check regctl installation
-        run: regctl version
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-        with:
-          # For now hardcoding the image to the latest version found in a successful run of the action, it seems like
-          # it is using quemu v7.0.0. The "tonistiigi/binfmt:latest" with qemu-v9.2.0 runs into this error:
-          # Setting up libc-bin (2.35-0ubuntu3.9) ...
-          # qemu: uncaught target signal 11 (Segmentation fault) - core dumped
-          image: "tonistiigi/binfmt@sha256:66e11bea77a5ea9d6f0fe79b57cd2b189b5d15b93a2bdb925be22949232e4e55"
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3.11.1
-
-      - name: Setup custom builder
-        run: |
-          docker buildx create --use --bootstrap --name multi-builder --platform linux/arm64,linux/amd64 --driver-opt network=host
-
-      - name: Run local Docker registry
-        run: docker run -d -p 5000:5000 --name registry --network=host registry:2
-
       - name: Install Dibber
-        run: pip install dibber==1.0.6 # TODO: Pinned until supporting parallel multi-platform builds
+        run: pip install dibber==$DIBBER_VERSION
+
+      - name: Setup buildx builder
+        run: |
+          docker buildx create --use --bootstrap --name dibber-builder --driver docker-container --driver-opt network=host
 
       - name: Build images
-        run: dibber build-multiplatform --parallel 8
+        run: dibber build --parallel $DIBBER_PARALLEL_BUILDS
 
-      - name: Upload images
-        if: success()
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        with:
+          name: dibber_manifest_data_amd64
+          path: "*.txt"
+
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        with:
+          name: logs_amd64
+          path: logs
+          retention-days: 14
+
+  #
+  # ARM64 builds
+  #
+
+  build_and_upload_arm64:
+    name: Build ARM64
+    env:
+      ARCH: arm64
+
+    #runs-on: ubuntu-24.04-arm
+    # If you want to run on a custom runner to make this faster you need to create one here
+    # https://github.com/organizations/<orgname>/settings/actions/runners
+    runs-on: faster-arm64
+
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # v3.6.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_PAT }}
+
+      - name: Set up Python
+        uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6.0.0
+        with:
+          python-version: "3.13"
+
+      - name: Install Dibber
+        run: pip install dibber==$DIBBER_VERSION
+
+      - name: Setup buildx builder
         run: |
-          dibber upload
+          docker buildx create --use --bootstrap --name dibber-builder --driver docker-container --driver-opt network=host
+
+      - name: Build images
+        run: dibber build --parallel $DIBBER_PARALLEL_BUILDS
+
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        with:
+          name: dibber_manifest_data_arm64
+          path: "*.txt"
+
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        with:
+          name: logs_arm64
+          path: logs
+          retention-days: 14
+
+  merge_manifests:
+    needs: [build_and_upload_amd64, build_and_upload_arm64]
+    name: Merge manifests
+    runs-on: ubuntu-24.04
+    # If you want to run on a custom runner to make this faster you need to create one here
+    # https://github.com/organizations/<orgname>/settings/actions/runners
+    # runs-on: faster-arm64
+
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a # v2.1.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_PAT }}
+
+      - name: Set up Python
+        uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6
+        with:
+          python-version: "3.13"
+
+      - name: Install Dibber
+        run: pip install dibber==$DIBBER_VERSION
+
+      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+        with:
+          name: dibber_manifest_data_amd64
+          path: amd64
+
+      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+        with:
+          name: dibber_manifest_data_arm64
+          path: arm64
+
+      - name: Merge manifests
+        run: |
+          # Append AMD64 files to temp files
+          cat amd64/manifest_data.txt >> tmp_manifest_data.txt
+          echo "" >> tmp_manifest_data.txt
+
+          cat amd64/uniq_ids.txt >> tmp_uniq_ids.txt
+          echo "" >> tmp_uniq_ids.txt
+
+          # Append ARM64 files to temp files
+          cat arm64/manifest_data.txt >> tmp_manifest_data.txt
+          echo "" >> tmp_manifest_data.txt
+
+          cat arm64/uniq_ids.txt >> tmp_uniq_ids.txt
+          echo "" >> tmp_uniq_ids.txt
+
+          # Sort + filter to target files
+          cat tmp_manifest_data.txt | sort -u | grep -v '^[[:space:]]*$' > manifest_data.txt
+          cat tmp_uniq_ids.txt | sort -u | grep -v '^[[:space:]]*$' > uniq_ids.txt
+
+          echo
+          echo "---- Manifest data ----"
+          cat manifest_data.txt
+
+          echo
+          echo "---- Unique IDs ----"
+          cat uniq_ids.txt
+
+          echo
+          echo
+
+          # Run merge
+          dibber merge-manifests

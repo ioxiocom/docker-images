@@ -14,10 +14,11 @@ on:
 
 env:
   DOCKER_BUILDKIT: 1
+  DIBBER_VERSION: 1.1.11
 
 jobs:
   build:
-    name: Build docker images
+    name: Build and scan docker images
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -28,10 +29,10 @@ jobs:
           python-version: "3.13"
 
       - name: Install Dibber
-        run: pip install dibber
+        run: pip install dibber==$DIBBER_VERSION
 
       - name: Build images
-        run: dibber build --parallel 8
+        run: dibber build --parallel 8 --local-only
 
       - name: List images
         run: dibber list
