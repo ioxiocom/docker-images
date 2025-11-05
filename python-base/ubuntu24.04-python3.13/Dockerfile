@@ -1,18 +1,13 @@
-ARG LOCAL_REGISTRY=""
-FROM ${LOCAL_REGISTRY}ubuntu-base:24.04
+FROM ubuntu-base:24.04
 
 ENV \
-    DEBIAN_FRONTEND="noninteractive" \
     GID=2000 \
     GROUP="api" \
-    LANG=C.UTF-8 \
-    LC_ALL=C.UTF-8 \
     PATH="${PATH}:/.venv:/usr/local/poetry/bin" \
     POETRY_HOME="/usr/local/poetry" \
     POETRY_VERSION="1.8.2" \
     PYTHONUNBUFFERED=1 \
     PYTHON_VERSION="3.13" \
-    TZ="UTC" \
     UID=2000 \
     USER="api" \
     WORKON_HOME="/.venv" \
